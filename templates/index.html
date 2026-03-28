@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sift — Your World, Summarized</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-manrope { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .search-input:focus { background-color: #dde4e5; }
+    .search-input::placeholder { color: rgba(90,96,97,0.5); }
+    .country-row:hover .arrow-icon { opacity: 1 !important; }
+    .loading-overlay { display: none; }
+    .loading-overlay.active { display: flex; }
+    .loading-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+  </style>
+</head>
+<body class="bg-[#f9f9f9] text-[#2d3435] min-h-screen">
+
+  <!-- Top Nav -->
+  <header class="fixed top-0 w-full z-50 flex items-center justify-between px-6 h-16 bg-[#f9f9f9]/85 backdrop-blur-xl">
+    <button class="p-2 rounded-full hover:bg-black/5 transition-colors">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <h1 class="font-manrope font-bold text-xl tracking-tighter">Sift</h1>
+    <button class="p-2 rounded-full hover:bg-black/5 transition-colors">
+      <span class="material-symbols-outlined">search</span>
+    </button>
+  </header>
+
+  <!-- Main -->
+  <main class="pt-24 pb-32 px-6 max-w-2xl mx-auto">
+
+    <!-- Search -->
+    <section class="mb-14">
+      <form id="searchForm" onsubmit="handleSearch(event)">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search curated stories..."
+          autocomplete="off"
+          class="search-input w-full bg-[#f2f4f4] border-none outline-none py-5 px-6 rounded-lg text-base text-[#2d3435] transition-colors duration-200"
+        />
+      </form>
+    </section>
+
+    <!-- Trending Topics -->
+    <section class="mb-16 fade-in">
+      <h2 class="text-[10px] uppercase tracking-[0.2em] text-[#5a6061]/60 mb-5">Trending Topics</h2>
+      <div class="flex flex-wrap gap-x-8 gap-y-3">
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('technology')">Technology</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('crypto')">Crypto</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('climate')">Climate</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('AI')">Artificial Intelligence</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('business')">Business</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('bangladesh')">Bangladesh</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('sports')">Sports</span>
+        <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('health')">Health</span>
+      </div>
+    </section>
+
+    <!-- Global Editions -->
+    <section class="mb-16 fade-in">
+
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-[10px] uppercase tracking-[0.2em] text-[#5a6061]/60">Global Editions</h2>
+        <button id="viewAllBtn" onclick="toggleAllCountries()" class="flex items-center gap-1 text-[10px] uppercase tracking-[0.15em] text-[#5a6061] hover:text-[#2d3435] transition-colors bg-transparent border-none cursor-pointer">
+          View All <span class="material-symbols-outlined text-sm">expand_more</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-8">
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('us')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">us</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">United States</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('gb')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">gb</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">United Kingdom</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('bangladesh')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">bd</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">Bangladesh</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('in')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">in</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">India</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('de')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">de</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">Germany</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('fr')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">fr</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">France</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+        <div class="country-row flex items-baseline justify-between cursor-pointer hover:opacity-60 transition-opacity py-1" onclick="searchTopic('jp')">
+          <div class="flex items-baseline gap-4">
+            <span class="text-2xl font-light text-[#5a6061]">jp</span>
+            <span class="font-manrope text-lg font-semibold tracking-tight">Japan</span>
+          </div>
+          <span class="material-symbols-outlined arrow-icon text-base text-[#5a6061] opacity-0 transition-opacity">arrow_forward</span>
+        </div>
+
+      </div>
+
+      <!-- All Countries hidden by default -->
+      <div id="allCountries" class="hidden mt-8 pt-8 border-t border-[#adb3b4]/20">
+        <div class="flex flex-wrap gap-4">
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('au')">au · Australia</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('br')">br · Brazil</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ca')">ca · Canada</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('cn')">cn · China</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('eg')">eg · Egypt</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('gr')">gr · Greece</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('hk')">hk · Hong Kong</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ie')">ie · Ireland</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('il')">il · Israel</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('it')">it · Italy</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('nl')">nl · Netherlands</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('no')">no · Norway</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('pk')">pk · Pakistan</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('pe')">pe · Peru</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ph')">ph · Philippines</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('pt')">pt · Portugal</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ro')">ro · Romania</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ru')">ru · Russia</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('sg')">sg · Singapore</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('es')">es · Spain</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('se')">se · Sweden</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ch')">ch · Switzerland</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('tw')">tw · Taiwan</span>
+          <span class="text-sm text-[#2d3435] cursor-pointer hover:opacity-50 transition-opacity" onclick="searchTopic('ua')">ua · Ukraine</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Quote -->
+    <section class="mt-20 opacity-20 hover:opacity-50 transition-opacity duration-700">
+      <div class="max-w-[280px] ml-auto text-right">
+        <p class="font-manrope italic text-sm leading-relaxed">
+          "Truth is ever to be found in simplicity, and not in the multiplicity and confusion of things."
+        </p>
+        <span class="block mt-2 text-[10px] uppercase tracking-[0.2em] text-[#5a6061]">— Isaac Newton</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay fixed inset-0 bg-[#f9f9f9]/90 backdrop-blur-sm z-[100] flex-col items-center justify-center gap-4">
+    <div class="flex gap-2">
+      <div class="loading-dot bg-[#2d3435]"></div>
+      <div class="loading-dot bg-[#2d3435]"></div>
+      <div class="loading-dot bg-[#2d3435]"></div>
+    </div>
+    <p class="text-xs text-[#5a6061] uppercase tracking-widest">Fetching intelligence...</p>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white/85 backdrop-blur-xl shadow-lg">
+    <button class="p-3 rounded-full bg-[#2d3435] text-[#f9f9f9] flex items-center">
+      <span class="material-symbols-outlined">search</span>
+    </button>
+    <button class="p-3 rounded-full text-[#adb3b4] hover:text-[#2d3435] transition-colors flex items-center">
+      <span class="material-symbols-outlined">article</span>
+    </button>
+    <button class="p-3 rounded-full text-[#adb3b4] hover:text-[#2d3435] transition-colors flex items-center">
+      <span class="material-symbols-outlined">bookmark</span>
+    </button>
+  </nav>
+
+  <script>
+    function handleSearch(e) {
+      e.preventDefault();
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      searchTopic(query);
+    }
+
+    function searchTopic(query) {
+      document.getElementById('loadingOverlay').classList.add('active');
+      fetch('/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      })
+      .then(res => res.json())
+      .then(data => {
+        sessionStorage.setItem('siftResults', JSON.stringify({ query, ...data }));
+        window.location.href = '/results';
+      })
+      .catch(() => {
+        document.getElementById('loadingOverlay').classList.remove('active');
+        alert('Something went wrong. Please try again.');
+      });
+    }
+
+    function toggleAllCountries() {
+      const el = document.getElementById('allCountries');
+      const btn = document.getElementById('viewAllBtn');
+      const isHidden = el.classList.contains('hidden');
+      el.classList.toggle('hidden');
+      btn.innerHTML = isHidden
+        ? 'View Less <span class="material-symbols-outlined text-sm">expand_less</span>'
+        : 'View All <span class="material-symbols-outlined text-sm">expand_more</span>';
+    }
+  </script>
+
+</body>
+</html>
