@@ -237,7 +237,11 @@
         </div>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           ${articles.map(a => `
-            <a class="article-card" href="${a.url || '#'}" target="_blank" rel="noopener">
+       <a class="article-card" href="${a.url || '#'}" target="_blank" rel="noopener">
+          ${a.image 
+  ? `<img src="${a.image}" alt="" style="width:100%; height:180px; object-fit:cover; border-radius:0.375rem; margin-bottom:1rem;" onerror="this.style.display='none'"/>` 
+  : `<div style="width:100%; height:120px; background:#f2f4f4; border-radius:0.375rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:center;"><span class="material-symbols-outlined" style="color:#adb3b4; font-size:2rem;">article</span></div>`
+}
               <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;">
                 <div style="flex: 1;">
                   <span style="font-family: 'Inter', sans-serif; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.1em; color: #5a6061; display: block; margin-bottom: 0.5rem;">${a.source?.name || 'News'} · ${(a.publishedAt || '').slice(0,10)}</span>
